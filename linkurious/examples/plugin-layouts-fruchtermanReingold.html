@@ -1,0 +1,209 @@
+<!-- START SIGMA IMPORTS -->
+<script src="../src/sigma.core.js"></script>
+<script src="../src/conrad.js"></script>
+<script src="../src/utils/sigma.utils.js"></script>
+<script src="../src/utils/sigma.polyfills.js"></script>
+<script src="../src/sigma.settings.js"></script>
+<script src="../src/classes/sigma.classes.dispatcher.js"></script>
+<script src="../src/classes/sigma.classes.configurable.js"></script>
+<script src="../src/classes/sigma.classes.graph.js"></script>
+<script src="../src/classes/sigma.classes.camera.js"></script>
+<script src="../src/classes/sigma.classes.quad.js"></script>
+<script src="../src/captors/sigma.captors.mouse.js"></script>
+<script src="../src/captors/sigma.captors.touch.js"></script>
+<script src="../src/renderers/sigma.renderers.canvas.js"></script>
+<script src="../src/renderers/sigma.renderers.webgl.js"></script>
+<script src="../src/renderers/sigma.renderers.svg.js"></script>
+<script src="../src/renderers/sigma.renderers.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="../src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="../src/renderers/svg/sigma.svg.edges.curvedArrow.js"></script>
+<script src="../src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="../src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="../src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="../src/misc/sigma.misc.animation.js"></script>
+<script src="../src/misc/sigma.misc.bindEvents.js"></script>
+<script src="../src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="../src/misc/sigma.misc.drawHovers.js"></script>
+<!-- END SIGMA IMPORTS -->
+<div id="container">
+  <style>
+    #graph-container {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+  </style>
+  <div id="graph-container"></div>
+</div>
+<script src="../plugins/sigma.plugins.animate/sigma.plugins.animate.js"></script>
+<script src="../plugins/sigma.layouts.fruchtermanReingold/sigma.layout.fruchtermanReingold.js"></script>
+<script>
+/**
+ * Just a simple example to show how to use the sigma.layouts.fruchtermanReingold
+ * plugin:
+ *
+ * A random graph is generated, such that its nodes are separated in some
+ * distinct clusters. Each cluster has its own color, and the density of
+ * links is stronger inside the clusters. So, we expect the algorithm to
+ * regroup the nodes of each cluster.
+ */
+var i,
+    s,
+    o,
+    N = 100,
+    E = 100,
+    C = 5,
+    d = 0.5,
+    cs = [],
+    g = {
+      /*nodes: [],
+      edges: []*/
+      nodes: [{"key":0,"value":1},{"key":1,"value":2},{"key":2,"value":3},{"key":3,"value":4},
+                  {"key":4,"value":5},{"key":5,"value":70},{"key":6,"value":11},{"key":7,"value":2},
+                  {"key":8,"value":3},{"key":9,"value":14},{"key":10,"value":5},{"key":11,"value":0},
+                  {"key":12,"value":11},{"key":13,"value":52},{"key":14,"value":23},{"key":15,"value":44},
+                  {"key":16,"value":15},{"key":17,"value":40},{"key":18,"value":61},{"key":19,"value":52},
+                  {"key":20,"value":13},{"key":21,"value":34},{"key":22,"value":75},{"key":23,"value":60}]
+                 /* ,
+                 [{"key":0,"value":12},{"key":1,"value":23},{"key":2,"value":74},{"key":3,"value":5},
+                  {"key":4,"value":10},{"key":5,"value":61},{"key":6,"value":16},{"key":7,"value":2},
+                  {"key":8,"value":3},{"key":9,"value":84},{"key":10,"value":65},{"key":11,"value":0},
+                  {"key":12,"value":21},{"key":13,"value":72},{"key":14,"value":53},{"key":15,"value":46},
+                  {"key":16,"value":45},{"key":17,"value":80},{"key":18,"value":18},{"key":19,"value":62},
+                  {"key":20,"value":73},{"key":21,"value":46},{"key":22,"value":58},{"key":23,"value":50}],
+                 [{"key":0,"value":13},{"key":1,"value":4},{"key":2,"value":5},{"key":3,"value":0},
+                  {"key":4,"value":47},{"key":5,"value":8},{"key":6,"value":1},{"key":7,"value":2},
+                  {"key":8,"value":23},{"key":9,"value":4},{"key":10,"value":5},{"key":11,"value":0},
+                  {"key":12,"value":1},{"key":13,"value":2},{"key":14,"value":3},{"key":15,"value":4},
+                  {"key":16,"value":45},{"key":17,"value":0},{"key":18,"value":1},{"key":19,"value":2},
+                  {"key":20,"value":13},{"key":21,"value":4},{"key":22,"value":5},{"key":23,"value":0}],
+                 [{"key":0,"value":4},{"key":1,"value":5},{"key":2,"value":76},{"key":3,"value":7},
+                  {"key":4,"value":38},{"key":5,"value":96},{"key":6,"value":17},{"key":7,"value":2},
+                  {"key":8,"value":36},{"key":9,"value":46},{"key":10,"value":57},{"key":11,"value":0},
+                  {"key":12,"value":21},{"key":13,"value":2},{"key":14,"value":73},{"key":15,"value":4},
+                  {"key":16,"value":25},{"key":17,"value":0},{"key":18,"value":71},{"key":19,"value":2},
+                  {"key":20,"value":23},{"key":21,"value":4},{"key":22,"value":77},{"key":23,"value":0}],
+                 [{"key":0,"value":15},{"key":1,"value":6},{"key":2,"value":7},{"key":3,"value":8},
+                  {"key":4,"value":29},{"key":5,"value":10},{"key":6,"value":41},{"key":7,"value":26},
+                  {"key":8,"value":33},{"key":9,"value":24},{"key":10,"value":55},{"key":11,"value":55},
+                  {"key":12,"value":31},{"key":13,"value":22},{"key":14,"value":53},{"key":15,"value":45},
+                  {"key":16,"value":25},{"key":17,"value":30},{"key":18,"value":41},{"key":19,"value":52},
+                  {"key":20,"value":13},{"key":21,"value":34},{"key":22,"value":45},{"key":23,"value":40}]]*/
+      edges: [{"source":1,"target":2,"weight":1.2857142857142856},
+                 {"source":2,"target":3,"weight":1.2857142857142856},
+                 {"source":3,"target":4,"weight":1.2857142857142856},
+                 {"source":3,"target":5,"weight":1.2857142857142856},
+                 {"source":5,"target":4,"weight":1.2857142857142856},
+                 {"source":11,"target":23,"weight":1.2857142857142856},
+                 {"source":21,"target":3,"weight":1.2857142857142856},
+                 {"source":13,"target":4,"weight":1.2857142857142856},
+                 {"source":3,"target":5,"weight":1.2857142857142856},
+                 {"source":5,"target":14,"weight":1.2857142857142856},
+                 {"source":1,"target":12,"weight":1.2857142857142856},
+                 {"source":21,"target":13,"weight":1.2857142857142856},
+                 {"source":3,"target":4,"weight":1.2857142857142856},
+                 {"source":13,"target":15,"weight":1.2857142857142856},
+                 {"source":10,"target":14,"weight":1.2857142857142856},
+                 {"source":7,"target":9,"weight":1.2857142857142856},
+                 {"source":8,"target":14,"weight":1.2857142857142856},
+                 {"source":9,"target":18,"weight":1.2857142857142856},
+                 {"source":10,"target":20,"weight":1.2857142857142856},
+                 {"source":11,"target":2,"weight":1.2857142857142856},
+                 {"source":12,"target":15,"weight":1.2857142857142856},
+                 {"source":13,"target":18,"weight":1.2857142857142856},
+                 {"source":14,"target":16,"weight":1.2857142857142856},
+                 {"source":15,"target":11,"weight":1.2857142857142856},
+                 {"source":16,"target":10,"weight":1.2857142857142856},
+                 {"source":17,"target":10,"weight":1.2857142857142856},
+                 {"source":18,"target":13,"weight":1.2857142857142856},
+                 {"source":19,"target":20,"weight":1.2857142857142856},
+                 {"source":20,"target":21,"weight":1.2857142857142856},
+                 {"source":21,"target":22,"weight":1.2857142857142856},
+                 {"source":22,"target":23,"weight":1.2857142857142856},
+                 {"source":23,"target":1,"weight":1.2857142857142856}]
+    };
+
+// Generate the graph:
+for (i = 0; i < C; i++)
+  cs.push({
+    id: i,
+    nodes: [],
+    color: '#' + (
+      Math.floor(Math.random() * 16777215).toString(16) + '000000'
+    ).substr(0, 6)
+  });
+
+for (i = 0; i < N; i++) {
+  o = cs[(Math.random() * C) | 0];
+  g.nodes.push({
+    id: 'n' + i,
+    label: 'Node' + i,
+    x: 100 * Math.cos(2 * i * Math.PI / N),
+    y: 100 * Math.sin(2 * i * Math.PI / N),
+    size: Math.random(),
+    color: o.color
+  });
+  o.nodes.push('n' + i);
+}
+
+for (i = 0; i < E; i++) {
+  if (Math.random() < 1 - d)
+    g.edges.push({
+      id: 'e' + i,
+      source: 'n' + ((Math.random() * N) | 0),
+      target: 'n' + ((Math.random() * N) | 0)
+    });
+  else {
+    o = cs[(Math.random() * C) | 0]
+    g.edges.push({
+      id: 'e' + i,
+      source: o.nodes[(Math.random() * o.nodes.length) | 0],
+      target: o.nodes[(Math.random() * o.nodes.length) | 0]
+    });
+  }
+}
+
+s = new sigma({
+  graph: g,
+  container: 'graph-container'
+});
+
+// Configure the Fruchterman-Reingold algorithm:
+var frListener = sigma.layouts.fruchtermanReingold.configure(s, {
+  iterations: 500,
+  easing: 'quadraticInOut',
+  duration: 800
+});
+
+// Bind the events:
+frListener.bind('start stop interpolate', function(e) {
+  console.log(e.type);
+});
+
+// Start the Fruchterman-Reingold algorithm:
+sigma.layouts.fruchtermanReingold.start(s);
+
+</script>

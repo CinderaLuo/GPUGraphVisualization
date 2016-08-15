@@ -1,0 +1,539 @@
+
+<html>
+<head>
+  <title></title>
+  <script src="src/sigma.core.js"></script>
+<script src="src/conrad.js"></script>
+<script src="src/utils/sigma.utils.js"></script>
+<script src="src/utils/sigma.polyfills.js"></script>
+<script src="src/sigma.settings.js"></script>
+<script src="src/classes/sigma.classes.dispatcher.js"></script>
+<script src="src/classes/sigma.classes.configurable.js"></script>
+<script src="src/classes/sigma.classes.graph.js"></script>
+<script src="src/classes/sigma.classes.camera.js"></script>
+<script src="src/classes/sigma.classes.quad.js"></script>
+<script src="src/captors/sigma.captors.mouse.js"></script>
+<script src="src/captors/sigma.captors.touch.js"></script>
+<script src="src/renderers/sigma.renderers.canvas.js"></script>
+<script src="src/renderers/sigma.renderers.webgl.js"></script>
+<script src="src/renderers/sigma.renderers.svg.js"></script>
+<script src="src/renderers/sigma.renderers.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.curvedArrow.js"></script>
+<script src="src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="src/misc/sigma.misc.animation.js"></script>
+<script src="src/misc/sigma.misc.bindEvents.js"></script>
+<script src="src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="src/misc/sigma.misc.drawHovers.js"></script>
+<script src="d3.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="jLouvain.js"></script>
+ <!-- Buttons core css -->
+    <link rel="stylesheet" href="buttons.css">
+
+    <!-- Only needed if you want support for dropdown menus -->
+    <script src="jquery.min.js"></script>
+    <script src="buttons.js"></script>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+
+<!--     <script src="classie.js"></script>
+<script src="selectFx.js"></script> -->
+
+
+</head>
+
+
+<!-- START SIGMA IMPORTS -->
+
+<!-- END SIGMA IMPORTS -->
+<body>
+    <div id="content_wrapper">
+
+<!--     <select id="dataCategory" >
+<option value="1" selected="selected" >data01</option>
+<option value="2" >data02</option>
+<option value="3" >data03</option>
+<option value="4" >data04</option>
+</select> -->
+
+    <span class="button-dropdown button-dropdown-primary" data-buttons="dropdown">
+      <button class="button button-primary " >
+        <i class="fa fa-bars"></i> Select Result
+      </button>
+      <ul id="dataCategory" class="button-dropdown-list is-below">
+        <li value="1" selected="selected" ><a onclick=run('OUT01.txt','26517','130738','5')>Data01</a></li>
+        <li value="2" ><a onclick=run('OUT02.txt','36682','176656','6')>Data02</a></li>
+        <li value="3" ><a onclick=run('OUT03.txt','36692','367662','8')>Data03</a></li>
+        <li value="4" ><a onclick=run('OUT04.txt','62586','295784','7')>Data04</a></li>
+        <li value="5" ><a onclick=run('OUT05.txt','262110','1799584','9')>Data05</a></li>
+        <li value="6" ><a onclick=run('OUT06.txt','425957','2099732','10')>Data06</a></li>
+        <li value="7" ><a onclick=run('OUT07.txt','410236','4878874','11')>Data07</a></li>
+      </ul>
+    </span>
+    
+    
+<!--     <select class="cs-select cs-skin-slide">
+      <option value="sightseeing" data-class="icon-camera">Sight Seeing</option>
+      <option value="business" data-class="icon-money">Business</option>
+      <option value="honeymoon" data-class="icon-heart">Honeymoon</option>
+      <option value="food" data-class="icon-food">Gourmet</option>
+      <option value="shopping" data-class="icon-shirt">Shopping</option>
+</select> -->
+<!--    
+ <input type="button" value="Run" id='reset_btn' class="button button-pill button-action" /> -->
+    <!-- <input type="button" value="Run Community Detection" id='comm_detect' /> -->
+    <button id="p" class="button button-pill button-action">FileName:</label>
+    <input type="text"  id='filePath' />
+    <input type="button" value="Add" id='addNewData' class="button button-pill button-action" />
+    <a  href="page01.html">
+    <input type="button" value="Back" id='back' class="button button-pill button-action" />
+    </a>
+
+    </div>
+  </body>
+<div id="container">
+  <style>
+    #graph-container {
+      top: 10%;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+  </style>
+  <div id="graph-container"></div>
+</div>
+<script src="plugins/sigma.layouts.forceAtlas2/worker.js"></script>
+<script src="plugins/sigma.layouts.forceAtlas2/supervisor.js"></script>
+<script>
+/**
+ * Just a simple example to show how to use the sigma.layouts.forceAtlas2
+ * plugin:
+ *
+ * A random graph is generated, such that its nodes are separated in some
+ * distinct clusters. Each cluster has its own color, and the density of
+ * links is stronger inside the clusters. So, we expect the algorithm to
+ * regroup the nodes of each cluster.
+ */
+ var selected_filePath;
+ var selected_Nodes;
+ var selected_Edges;
+ var selected_Community;
+ 
+function run(selected_filePath,selected_Nodes,selected_Edges,selected_Community)
+{
+/*var selected_Data = document.getElementById("dataCategory").value;
+ 
+ console.log("selectbutton:  ",selected_Data);
+  if(selected_Data==1){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+  }
+  else if(selected_Data==2){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+  }
+  else if(selected_Data==3){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+  }
+  else{
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+  }
+  console.log('NUMBER',document.getElementById("dataCategory").value);*/
+    d3.json(selected_filePath,function(error,data)
+          {
+            
+            // var node_data02=[];
+            // for(var a=0;a<1000;a++){
+            //   node_data02.push(a);
+            // }
+           // console.log('node_data:',node_data02);
+            var edge_data02=data.edges01;
+            //var community_data02=data.community;
+            //console.log('edge_data:',edge_data02);
+            //console.log('selected_Community:',selected_Community);
+
+        var i,
+            s,
+            o,
+            N = selected_Nodes,
+            E = selected_Edges,
+            C = selected_Community,
+            d = 0.5,
+            cs = [],
+            g = {
+              nodes: [],
+              edges: []
+            };
+            
+            if(E>200000)
+            {  
+              E=200000;
+              
+              if(N>60000)
+                {
+                  E=100000;
+                  N=10000;
+                } 
+
+            }
+
+        // Generate the graph:
+        for (i = 0; i < C; i++)
+          cs.push({
+            id: i,
+            nodes: [],
+            color: '#' + (
+              Math.floor(Math.random() * 16777215).toString(16) + '000000'
+            ).substr(0, 6)
+          });
+
+        for (i = 0; i < N; i++) {
+          o = cs[(Math.random() * C) | 0];
+          g.nodes.push({
+            id: 'n' + i,
+            label: 'Node' + i,
+            x: 100 * Math.cos(2 * i * Math.PI / N),
+            y: 100 * Math.sin(2 * i * Math.PI / N),
+            size: Math.random(),
+            color: o.color
+          });
+          o.nodes.push('n' + i);
+        }
+
+        for (i = 0; i < E; i++) {
+              var judge=1;
+              for(;judge>1;)
+              {
+                    judge++;
+                    var source_number=Math.random() * N;
+                    //if((typeof(edge_data02[i].source) === "undefined")&&(edge_data02[i].source===undefined)){
+                      if(!edge_data02[i].source){
+                      //console.log("source---defined");
+                      console.log(edge_data02[i].source);
+                      console.log("source---undefined"+i);
+                      source_number=Math.random() * N;
+                    }
+                    else{
+                      //source_number=Math.random() * N;
+                      source_number=Number(edge_data02[i].source);
+                    }
+                    var target_number=Math.random() * N;
+                   // if((typeof(edge_data02[i].target) === "undefined")&&(edge_data02[i].target===undefined)){
+                    if(!edge_data02[i].target){
+                     // console.log("target---defined");
+                     console.log(edge_data02[i].target);
+                     console.log("target---undefined"+i);
+                      target_number=Math.random() * N;
+                      
+                    }
+                    else{
+                      //target_number=Math.random() * N;
+                      target_number=Number(edge_data02[i].target);
+                    }
+                    if((!source_number)&&(!target_number))judge=judge-1;
+            }
+          if (Math.random() < 1 - d)
+          //if(1)
+            g.edges.push({
+              id: 'e' + i,
+              
+              // source: 'n' + ((Math.random() * N) | 0),
+              // target: 'n' + ((Math.random() * N) | 0)
+              source: 'n' + ((source_number) | 0),
+              target: 'n' + ((target_number) | 0)
+            });
+          else {
+            o = cs[(Math.random() * C) | 0]
+            g.edges.push({
+              id: 'e' + i,
+              source: o.nodes[(Math.random() * o.nodes.length) | 0],
+              target: o.nodes[(Math.random() * o.nodes.length) | 0]
+              // source: o.nodes[(source_number* o.nodes.length)| 0],
+              // target: o.nodes[(target_number* o.nodes.length) | 0]
+            });
+          }
+        }
+        console.log('edges:',g.edges);
+        s = new sigma({
+          graph: g,
+          container: 'graph-container',
+          settings: {
+            drawEdges: false
+          }
+        });
+
+        // Start the ForceAtlas2 algorithm:
+        var fa = s.startForceAtlas2({worker: true});
+        });
+
+      
+};
+
+
+//add new data ----start---function
+d3.select('#addNewData').on('click', function(){
+  var flag=false;
+  var selected_AddData = document.getElementById("filePath").value;
+  console.log("selectedFilePath:  ",selected_AddData);
+  if(selected_AddData=="OUT01.txt"){
+    selected_filePath="OUT01.txt";
+    selected_Nodes=26517;
+    selected_Edges=130338;
+    selected_Community=5;
+    flag=true;
+  }
+  else if(selected_AddData==1){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=26517;
+    selected_Edges=130738;
+    selected_Community=5;
+    flag=true;
+  }
+  else if(selected_AddData=="OUT02.txt"){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=36682;
+    selected_Edges=176656;
+    selected_Community=6;
+    flag=true;
+  }
+  else if(selected_AddData==2){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=36682;
+    selected_Edges=176656;
+    selected_Community=6;
+    flag=true;
+  }
+  else if(selected_AddData=="OUT03.txt"){
+    selected_filePath="OUT03.txt";
+    selected_Nodes=36692;
+    selected_Edges=93000;
+    selected_Community=8;
+    flag=true;
+  }
+  else if(selected_AddData==3){
+    selected_filePath="OUT03.txt";
+    selected_Nodes=36692;
+    selected_Edges=130738;
+    selected_Community=8;
+    flag=true;
+  }
+  else if(selected_AddData=="OUT04.txt"){
+    selected_filePath="OUT04.txt";
+    selected_Nodes=31000;
+    selected_Edges=104000;
+    selected_Community=7;
+    flag=true;
+  }
+  else if(selected_AddData==4){
+    selected_filePath="OUT04.txt";
+    selected_Nodes=31000;
+    selected_Edges=104000;
+    selected_Community=7;
+    flag=true;
+  }
+  else if(selected_AddData=="OUT05.txt"){
+    selected_filePath="OUT05.txt";
+    selected_Nodes=32000;
+    selected_Edges=105000;
+    selected_Community=9;
+    flag=true;
+  }
+  else if(selected_AddData==5){
+    selected_filePath="OUT05.txt";
+    selected_Nodes=32000;
+    selected_Edges=105000;
+    selected_Community=9;
+    flag=true;
+  }
+  else if(selected_AddData=="OUT06.txt"){
+    selected_filePath="OUT06.txt";
+    selected_Nodes=33000;
+    selected_Edges=106000;
+    selected_Community=10;
+    flag=true;
+  }
+  else if(selected_AddData==6){
+    selected_filePath="OUT06.txt";
+    selected_Nodes=33000;
+    selected_Edges=106000;
+    selected_Community=10;
+    flag=true;
+  }
+  else if(selected_AddData=="OUT07.txt"){
+    selected_filePath="OUT07.txt";
+    selected_Nodes=34000;
+    selected_Edges=107000;
+    selected_Community=11;
+    flag=true;
+  }
+  else if(selected_AddData==7){
+    selected_filePath="OUT07.txt";
+    selected_Nodes=34000;
+    selected_Edges=107000;
+    selected_Community=11;
+    flag=true;
+  }
+  else if(selected_AddData=="OUT08.txt"){
+    selected_filePath="OUT08.txt";
+    selected_Nodes=35000;
+    selected_Edges=100000;
+    selected_Community=10;
+    flag=true;
+  }
+  else if(selected_AddData==8){
+    selected_filePath="OUT08.txt";
+    selected_Nodes=35000;
+    selected_Edges=100000;
+    selected_Community=10;
+    flag=true;
+  }
+  else{
+    alert("Please Input Corrcet FilePath!");
+  } 
+      if(flag)
+     d3.json(selected_filePath,function(error,data)
+          {
+            
+            // var node_data02=[];
+            // for(var a=0;a<1000;a++){
+            //   node_data02.push(a);
+            // }
+           // console.log('node_data:',node_data02);
+            var edge_data02=data.edges01;
+            console.log('edge_data:',edge_data02);
+
+        var i,
+            s,
+            o,
+            N = selected_Nodes,
+            E = selected_Edges,
+            C = selected_Community,
+            d = 0.5,
+            cs = [],
+            g = {
+              nodes: [],
+              edges: []
+            };
+
+        // Generate the graph:
+        for (i = 0; i < C; i++)
+          cs.push({
+            id: i,
+            nodes: [],
+            color: '#' + (
+              Math.floor(Math.random() * 16777215).toString(16) + '000000'
+            ).substr(0, 6)
+          });
+
+        for (i = 0; i < N; i++) {
+          o = cs[(Math.random() * C) | 0];
+          g.nodes.push({
+            id: 'n' + i,
+            label: 'Node' + i,
+            x: 100 * Math.cos(2 * i * Math.PI / N),
+            y: 100 * Math.sin(2 * i * Math.PI / N),
+            size: Math.random(),
+            color: o.color
+          });
+          o.nodes.push('n' + i);
+        }
+
+        for (i = 0; i < E; i++) {
+              var judge=1;
+              for(;judge>1;)
+              {
+                    judge++;
+                    var source_number=Math.random() * N;
+                    //if((typeof(edge_data02[i].source) === "undefined")&&(edge_data02[i].source===undefined)){
+                      if(!edge_data02[i].source){
+                      //console.log("source---defined");
+                      console.log(edge_data02[i].source);
+                      console.log("source---undefined"+i);
+                      source_number=Math.random() * N;
+                    }
+                    else{
+                      //source_number=Math.random() * N;
+                      source_number=Number(edge_data02[i].source);
+                    }
+                    var target_number=Math.random() * N;
+                   // if((typeof(edge_data02[i].target) === "undefined")&&(edge_data02[i].target===undefined)){
+                    if(!edge_data02[i].target){
+                     // console.log("target---defined");
+                     console.log(edge_data02[i].target);
+                     console.log("target---undefined"+i);
+                      target_number=Math.random() * N;
+                      
+                    }
+                    else{
+                      //target_number=Math.random() * N;
+                      target_number=Number(edge_data02[i].target);
+                    }
+                    if((!source_number)&&(!target_number))judge=judge-1;
+            }
+          if (Math.random() < 1 - d)
+          //if(1)
+            g.edges.push({
+              id: 'e' + i,
+              
+              // source: 'n' + ((Math.random() * N) | 0),
+              // target: 'n' + ((Math.random() * N) | 0)
+              source: 'n' + ((source_number) | 0),
+              target: 'n' + ((target_number) | 0)
+            });
+          else {
+            o = cs[(Math.random() * C) | 0]
+            g.edges.push({
+              id: 'e' + i,
+              source: o.nodes[(Math.random() * o.nodes.length) | 0],
+              target: o.nodes[(Math.random() * o.nodes.length) | 0]
+              // source: o.nodes[(source_number* o.nodes.length)| 0],
+              // target: o.nodes[(target_number* o.nodes.length) | 0]
+            });
+          }
+        }
+        console.log('edges:',g.edges);
+        s = new sigma({
+          graph: g,
+          container: 'graph-container',
+          settings: {
+            drawEdges: false
+          }
+        });
+
+        // Start the ForceAtlas2 algorithm:
+        var fa = s.startForceAtlas2({worker: true});
+        });
+      
+  });
+ 
+</script>
+</html>

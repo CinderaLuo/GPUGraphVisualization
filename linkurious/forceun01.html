@@ -1,0 +1,226 @@
+<!-- START SIGMA IMPORTS -->
+<meta charset="utf-8">
+<script src="src/sigma.core.js"></script>
+<script src="src/conrad.js"></script>
+<script src="src/utils/sigma.utils.js"></script>
+<script src="src/utils/sigma.polyfills.js"></script>
+<script src="src/sigma.settings.js"></script>
+<script src="src/classes/sigma.classes.dispatcher.js"></script>
+<script src="src/classes/sigma.classes.configurable.js"></script>
+<script src="src/classes/sigma.classes.graph.js"></script>
+<script src="src/classes/sigma.classes.camera.js"></script>
+<script src="src/classes/sigma.classes.quad.js"></script>
+<script src="src/captors/sigma.captors.mouse.js"></script>
+<script src="src/captors/sigma.captors.touch.js"></script>
+<script src="src/renderers/sigma.renderers.canvas.js"></script>
+<script src="src/renderers/sigma.renderers.webgl.js"></script>
+<script src="src/renderers/sigma.renderers.svg.js"></script>
+<script src="src/renderers/sigma.renderers.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.curvedArrow.js"></script>
+<script src="src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="src/misc/sigma.misc.animation.js"></script>
+<script src="src/misc/sigma.misc.bindEvents.js"></script>
+<script src="src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="src/misc/sigma.misc.drawHovers.js"></script>
+
+<script src="d3.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="jLouvain.js"></script>
+
+<!--   Buttons core css
+<link rel="stylesheet" href="buttons.css">
+
+Only needed if you want support for dropdown menus
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="buttons.js"></script>
+
+Only needed if you want font icons
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet"> -->
+<!-- END SIGMA IMPORTS -->
+<div id="container">
+  <style>
+    #graph-container {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+  </style>
+  <div id="graph-container"></div>
+</div>
+<!--   <div class="button-group" align="center" >
+    <span class="button-dropdown button-dropdown-primary" data-buttons="dropdown">
+    <button class="button button-primary " >
+      <i class="fa fa-bars"></i> Select Data
+    </button>
+ 
+    <ul class="button-dropdown-list is-below">
+      <li><a ><i class="fa fa-heart-o"></i> Option Link 1</a></li>
+      <li><a >Option Link 2</a></li>
+      <li class="button-dropdown-divider">
+        <a href="#">Option Link 3</a>
+      </li>
+    </ul>
+  </span>
+
+  <button type="button" class="button button-pill button-action"  id="GorC" value="1">GPU</button>
+  <button type="button" class="button button-pill button-action"  id="GorC" value="2">CPU</button>
+<a  href="3.html">
+<button type="button" class="button button-pill button-action" >Jump</button>
+</a>
+
+  <button type="button" class="button button-pill button-action"  id='reset_btn'>Run</button>
+<a  href="css01.html"><input  type = "button" class="button button-pill button-action"/> 
+</a>
+  
+
+</div> -->
+<script src="plugins/sigma.layouts.forceAtlas2/worker.js"></script>
+<script src="plugins/sigma.layouts.forceAtlas2/supervisor.js"></script>
+<script>
+/**
+ * Just a simple example to show how to use the sigma.layouts.forceAtlas2
+ * plugin:
+ *
+ * A random graph is generated, such that its nodes are separated in some
+ * distinct clusters. Each cluster has its own color, and the density of
+ * links is stronger inside the clusters. So, we expect the algorithm to
+ * regroup the nodes of each cluster.
+ */
+ d3.json("OUT02.txt",function(error,data)
+  {
+    
+    // var node_data02=[];
+    // for(var a=0;a<1000;a++){
+    //   node_data02.push(a);
+    // }
+   // console.log('node_data:',node_data02);
+    var edge_data02=data.edges01;
+    console.log('edge_data:',edge_data02);
+
+var i,
+    s,
+    o,
+    N = 22684,
+    E = 54705,
+    C = 5,
+    d = 0.5,
+    cs = [],
+    g = {
+      nodes: [],
+      edges: []
+    };
+
+// Generate the graph:
+for (i = 0; i < C; i++)
+  cs.push({
+    id: i,
+    nodes: [],
+    color: '#' + (
+      Math.floor(Math.random() * 16777215).toString(16) + '000000'
+    ).substr(0, 6)
+  });
+
+for (i = 0; i < N; i++) {
+  o = cs[(Math.random() * C) | 0];
+  g.nodes.push({
+    id: 'n' + i,
+    label: 'Node' + i,
+    x: 100 * Math.cos(2 * i * Math.PI / N),
+    y: 100 * Math.sin(2 * i * Math.PI / N),
+    size: Math.random(),
+    color: o.color
+  });
+  o.nodes.push('n' + i);
+}
+
+for (i = 0; i < E; i++) {
+      var judge=1;
+      for(;judge>1;)
+      {
+            judge++;
+            var source_number=Math.random() * N;
+            //if((typeof(edge_data02[i].source) === "undefined")&&(edge_data02[i].source===undefined)){
+              if(!edge_data02[i].source){
+              //console.log("source---defined");
+              console.log(edge_data02[i].source);
+              console.log("source---undefined"+i);
+              source_number=Math.random() * N;
+            }
+            else{
+              //source_number=Math.random() * N;
+              source_number=Number(edge_data02[i].source);
+            }
+            var target_number=Math.random() * N;
+           // if((typeof(edge_data02[i].target) === "undefined")&&(edge_data02[i].target===undefined)){
+            if(!edge_data02[i].target){
+             // console.log("target---defined");
+             console.log(edge_data02[i].target);
+             console.log("target---undefined"+i);
+              target_number=Math.random() * N;
+              
+            }
+            else{
+              //target_number=Math.random() * N;
+              target_number=Number(edge_data02[i].target);
+            }
+            if((!source_number)&&(!target_number))judge=judge-1;
+    }
+  if (Math.random() < 1 - d)
+  //if(1)
+    g.edges.push({
+      id: 'e' + i,
+      
+      // source: 'n' + ((Math.random() * N) | 0),
+      // target: 'n' + ((Math.random() * N) | 0)
+      source: 'n' + ((source_number) | 0),
+      target: 'n' + ((target_number) | 0)
+    });
+  else {
+    o = cs[(Math.random() * C) | 0]
+    g.edges.push({
+      id: 'e' + i,
+      source: o.nodes[(Math.random() * o.nodes.length) | 0],
+      target: o.nodes[(Math.random() * o.nodes.length) | 0]
+      // source: o.nodes[(source_number* o.nodes.length)| 0],
+      // target: o.nodes[(target_number* o.nodes.length) | 0]
+    });
+  }
+}
+console.log('edges:',g.edges);
+s = new sigma({
+  graph: g,
+  container: 'graph-container',
+  settings: {
+    drawEdges: false
+  }
+});
+
+// Start the ForceAtlas2 algorithm:
+var fa = s.startForceAtlas2({worker: true});
+});
+</script>

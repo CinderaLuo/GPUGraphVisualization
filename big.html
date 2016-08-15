@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../jLouvain.js"></script>
+  <!-- Buttons core css -->
+  <link rel="stylesheet" href="css/buttons.css">
+
+  <!-- Only needed if you want support for dropdown menus -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="js/buttons.js"></script>
+
+  <!-- Only needed if you want font icons -->
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+
+    <style>
+    .node {
+      stroke: #fff;
+      stroke-width: 1.5px;
+    }
+
+    .link {
+      stroke: #999;
+      stroke-opacity: .6;
+    }
+    </style>
+</head>
+
+  <body>
+
+
+<!--     <div id="content_wrapper">
+<select id="GorC">
+<option value="1" selected="selected">GPU</option>
+<option value="2">CPU</option>
+</select>
+<input type="button" value="Run" id='reset_btn' />
+<input type="button" value="Run Community Detection" id='comm_detect' />
+<label id="p"></label>
+</div> -->
+
+<!--   <div class="button-group">
+  <button type="button" class="button button-primary" id='reset_btn'>Run</button>
+
+  DROPDOWN MENU
+  <span class="button-dropdown button-dropdown-primary" data-buttons="dropdown" id="GorC">
+	  <a href="#" class="button button-primary"> Select  <i class="fa fa-caret-down"></i></a>
+ 
+    <ul class="button-dropdown-list is-below">
+      <li><a class="button-dropdown-divider" value="1">GPU</a></li>
+      <li><a class="button-dropdown-divider" value="2">CPU</a></li>
+    </ul>
+  </span>
+</div> -->
+<!-- style="margin:0 auto;width:600px;" -->
+
+  <div class="button-group" align="center" >
+      <span class="button-dropdown button-dropdown-primary" data-buttons="dropdown">
+	    <button class="button button-primary " >
+	      <i class="fa fa-bars"></i> Select Data
+	    </button>
+	 
+	    <ul class="button-dropdown-list is-below">
+	      <li><a ><i class="fa fa-heart-o"></i> Option Link 1</a></li>
+	      <li><a >Option Link 2</a></li>
+	      <li class="button-dropdown-divider">
+	        <a href="#">Option Link 3</a>
+	      </li>
+	    </ul>
+    </span>
+
+    <button type="button" class="button button-pill button-action"  id="GorC" value="1">GPU</button>
+    <button type="button" class="button button-pill button-action"  id="GorC" value="2">CPU</button>
+<a  href="3.html">
+<button type="button" class="button button-pill button-action" >Jump</button>
+	</a>
+
+    <button type="button" class="button button-pill button-action"  id='reset_btn'>Run</button>
+<!--     <a  href="css01.html"><input  type = "button" class="button button-pill button-action"/> 
+</a> -->
+    
+
+  </div>
+
+
+  </body>
+  <div id="container">
+  <script>
+
+  //Original node and edge data
+
+  var node_data01=null;
+  var edge_data01=null;
+
+
+  var i=0;
+  var timer=null;
+ 
+
+  
+  // d3.select('#comm_detect').on('click', function(){
+  // 	document.getElementById("p").innerText="10s";
+  //   //Communnity detection on click event
+    
+  //   var community_assignment_result = community();
+  //   var node_ids = Object.keys(community_assignment_result);
+
+  //   console.log('Resulting Community Data', community_assignment_result);
+
+  //   var max_community_number = 0;
+  //   node_ids.forEach(function(d){
+  //     node_data01[d].community = community_assignment_result[d];
+  //     max_community_number = max_community_number < community_assignment_result[d] ? community_assignment_result[d]: max_community_number;
+  //   });
+
+  //   console.log(max_community_number);
+
+  //   var color = d3.scale.category20().domain(d3.range([0, 30]));
+    
+  //   // var t=d3.timer(function(){
+  //   //   changeColor();
+  //   //   if(i>=row) t.stop();
+  //   // },20);
+  //   // t.start();
+  //   //changeColor();
+    
+   
+
+  // });
+   	  var width = 1250;
+	  var height = 520;
+	  /*var width=3600;
+	  var height=3600;*/
+	  var colors = d3.scale.category20();
+	  // var original_node_data = d3.entries(node_data01);
+	  var zoom = d3.behavior.zoom()
+	          .scaleExtent([0.01, 3])
+	          .on("zoom", zoomed);
+
+	  var force = d3.layout.force()
+	              .charge(-1000)
+	              .linkDistance(75)
+	              .size([width, height]);
+
+	  var svg = d3.select("body").append("svg")
+	    .attr("width", width)
+	    .attr("height", height)
+	    .attr("x",200)
+	    .attr("y",200)
+	    .append("g")
+	    .call(zoom);
+
+
+	  var container = svg.append("g");
+	  function zoomed() {
+	        container.attr("transform", 
+	        "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+	  }
+ 
+
+  d3.select('#reset_btn').on('click', function()
+  {
+     // d3.selectAll('.node')
+     //  .data(node_data01[0])
+     //  .style('fill', '#a59590');
+     // var svg //你的chart
+     // svg.selectAll(*).remove()//直接jquery的remove()就行
+     
+
+     document.getElementById("container").innerHTML="";
+
+     var selectbutton = document.getElementById("GorC").value;
+     console.log("selectbutton:  ",selectbutton);
+      
+      if(selectbutton==1)
+      {
+      	var Speed =500;
+      	console.log("Speed",Speed);
+      }
+      else
+      {
+      	var Speed =1000;
+      	console.log("Speed",Speed);
+      }
+
+
+    d3.json("OUT02.txt",function(error,data){
+
+	  	d3.selectAll(".link").remove();
+	  	d3.selectAll(".node").remove();
+	  	edge_data01=data.edges01;
+	  	node_data01=data.nodes01;
+
+	  	var row=node_data01.length;
+	  	
+	  	console.log('entries',row);
+	  	console.log('Input Nodes', node_data01);
+	  	console.log('Input Edges',edge_data01);
+	  	var e1;
+	  	var e2;
+	  	var n1;
+	  	var n2;
+	  	var n3;
+	  	//console.log('Input Node Data', edge_data_zero);
+	 	//console.log('Input Edge Data', node_data_zero);
+	 	//var edge_data_text=[];
+	 	//var node_data_text=[[]];
+
+	  	for(e1=0;e1<edge_data01.length;e1++)
+	  	{
+	  		edge_data01[e1].source=Math.floor((edge_data01[e1].source)/100);
+	  		edge_data01[e1].target=Math.floor((edge_data01[e1].target)/100);
+	  		edge_data01[e1].weight=edge_data01[e1].weight;
+	  	}
+	  	for(n1=0;n1<node_data01.length;n1++)
+	  	{
+	  		for(n2=0;n2<node_data01[n1].length;n2++)
+	  		{
+	  			node_data01[n1][n2].key=Math.floor((node_data01[n1][n2].key)/100);
+	  			node_data01[n1][n2].value=Math.floor((node_data01[n1][n2].value)/100);
+	  		}
+	  	}
+
+	  	//画图
+	   //Drawing code
+		  var max_weight = d3.max(edge_data01, function(d){ return d.weight});
+		  var weight_scale = d3.scale.linear().domain([0, max_weight]).range([0.5,2]);
+
+		  
+		  //var row =20;
+		  //var community = jLouvain().nodes(node_data01).edges(edge_data01);
+
+
+
+		  // svg.append('text')
+			 //  .attr('x',10)
+			 //  .attr('y',20)
+			 //  .style('fill','steelblue')
+			 //  .style('font-size','24px')
+			 //  .style('font-weight','bold')
+			 //  .text('用时:'+10+'s');
+
+		  force.nodes(node_data01[0])
+		      .links(edge_data01)
+		      .start();
+
+		  var link = container.append("g")
+		  	  .selectAll(".link")
+		      .data(edge_data01)
+		      .enter().append("line")
+		      .attr("class", "link")
+		      .style("stroke", function(){
+		        return colors(Math.random()*360);
+		      })
+		      .style("stroke-width", function(d) { return weight_scale(d.weight); });
+
+		 //console.log('value:   ',node_data01[0][20].value);
+		 //console.log('key:   ',node_data01[0][20].key);
+
+		  var node = container.append("g")
+		      .selectAll(".node")
+		      .data(force.nodes())
+		      .enter().append("circle")
+		      .attr("class", "node")
+		      //.attr("x", function(d,i) { return  Math.cos(2 * /*node_data01[row-1][i]*/d.value * Math.PI /row); })
+	          //.attr("y", function(d,i) { return  Math.sin(2 * /*node_data01[row-1][i]*/d.value * Math.PI /row); })
+		      .attr("r", function(){
+		        return (Math.random()+1)*10;
+		      })
+		      .style("fill", '#a30500')
+		      .call(force.drag);
+
+		 
+
+		  force.on("tick", function() {
+		    link.attr("x1", function(d) { return d.source.x; })
+		        .attr("y1", function(d) { return d.source.y; })
+		        .attr("x2", function(d) { return d.target.x; })
+		        .attr("y2", function(d) { return d.target.y; });
+
+		    node.attr("cx", function(d) { return d.x; })
+		        .attr("cy", function(d) { return d.y; });
+		    	
+		   
+		  });
+
+		  
+		   
+
+		  //画图---end
+		  //changeColor----start
+		  timer=setInterval(function changeColor(){
+			    d3.selectAll('.node')
+			      .data(node_data01[i]).transition().duration(Speed)
+			      .style('fill', function(d){
+			        return "rgb("+((d.value*29)%255)+"," +((d.value*49)%255)+","  + ((d.value * 99)%255) + ")";
+			      })
+			      i++;
+			      if(i>=row) {i=0;
+			        clearInterval(timer);
+			        document.getElementById("p").style.fontSize = "large";
+					document.getElementById("p").style.fontSize = "20px";
+					document.getElementById("p").style.color = "red"
+			        document.getElementById("p").innerText="TotalTime:"+row*Speed*3+"ms";
+			      }
+			      
+			      
+
+			      force.nodes(node_data01[i])
+			      .links(edge_data01)
+			      .start();
+
+			      
+
+			      var link = svg.selectAll(".link")
+			      .data(edge_data01)
+			      .enter().append("line")
+			      .attr("class", "link")
+			      .style("stroke-width", function(d) { return weight_scale(d.weight); });
+
+			 	 var node = svg.selectAll(".node")
+			      .data(force.nodes())
+			      .enter().append("circle")
+			      .attr("class", "node")
+			      .attr("r", function(){
+		        	return (Math.random()+1)*10;
+		     		 })
+			      .style("fill", '#a30500')
+			      .call(force.drag);
+
+			  	force.on("tick", function() {
+				    link.attr("x1", function(d) { return d.source.x; })
+				        .attr("y1", function(d) { return d.source.y; })
+				        .attr("x2", function(d) { return d.target.x; })
+				        .attr("y2", function(d) { return d.target.y; });
+
+				    /*node.attr("cx", function(d) { return d.x; })
+				        .attr("cy", function(d) { return d.y; });*/
+			  });
+
+
+			}
+			  	,1000);
+
+	  
+	  ///changeColor ----end
+
+
+
+  });
+      
+  });
+  </script>
+  </div>
+</html>

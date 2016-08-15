@@ -1,0 +1,46 @@
+{
+	"nodes01":
+	[
+		
+		[
+			{"key":0,"value":1},
+			{"key":1,"value":2},
+			{"key":2,"value":3},
+			{"key":3,"value":4},
+			{"key":4,"value":5},
+			{"key":5,"value":0}
+		]
+	,
+		
+		[{"key":0,"value":2},{"key":1,"value":3},{"key":2,"value":4},{"key":3,"value":5},{"key":4,"value":0},{"key":5,"value":1}]
+	,
+		
+		[{"key":0,"value":3},{"key":1,"value":4},{"key":2,"value":5},{"key":3,"value":0},{"key":4,"value":7},{"key":5,"value":8}]
+	,
+		
+		[{"key":0,"value":4},{"key":1,"value":5},{"key":2,"value":6},{"key":3,"value":7},{"key":4,"value":8},{"key":5,"value":9}]
+	,
+		
+		[{"key":0,"value":5},{"key":1,"value":3},{"key":2,"value":2},{"key":3,"value":1},{"key":4,"value":0},{"key":5,"value":10}]
+	
+	]
+
+	,
+	"edges01":
+               [{"source":1,"target":2,"weight":1.2857142857142856},
+		{"source":2,"target":3,"weight":1.2857142857142856},
+		{"source":3,"target":4,"weight":1.2857142857142856},
+		{"source":3,"target":5,"weight":1.2857142857142856},
+		{"source":5,"target":4,"weight":1.2857142857142856},
+		{"source":1,"target":0,"weight":1.2857142857142856},
+		{"source":2,"target":0,"weight":1.2857142857142856},
+		{"source":3,"target":0,"weight":1.2857142857142856},
+		{"source":0,"target":5,"weight":1.2857142857142856},
+		{"source":0,"target":4,"weight":1.2857142857142856},
+		{"source":5,"target":2,"weight":1.2857142857142856},
+		{"source":1,"target":3,"weight":1.2857142857142856},
+		{"source":1,"target":4,"weight":1.2857142857142856},
+		{"source":2,"target":5,"weight":1.2857142857142856},
+		{"source":5,"target":4,"weight":1.2857142857142856}]
+
+}

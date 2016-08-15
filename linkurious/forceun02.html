@@ -1,0 +1,530 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+
+  
+  <title></title>
+  <script src="src/sigma.core.js"></script>
+<script src="src/conrad.js"></script>
+<script src="src/utils/sigma.utils.js"></script>
+<script src="src/utils/sigma.polyfills.js"></script>
+<script src="src/sigma.settings.js"></script>
+<script src="src/classes/sigma.classes.dispatcher.js"></script>
+<script src="src/classes/sigma.classes.configurable.js"></script>
+<script src="src/classes/sigma.classes.graph.js"></script>
+<script src="src/classes/sigma.classes.camera.js"></script>
+<script src="src/classes/sigma.classes.quad.js"></script>
+<script src="src/captors/sigma.captors.mouse.js"></script>
+<script src="src/captors/sigma.captors.touch.js"></script>
+<script src="src/renderers/sigma.renderers.canvas.js"></script>
+<script src="src/renderers/sigma.renderers.webgl.js"></script>
+<script src="src/renderers/sigma.renderers.svg.js"></script>
+<script src="src/renderers/sigma.renderers.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="src/renderers/svg/sigma.svg.edges.curvedArrow.js"></script>
+<script src="src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="src/misc/sigma.misc.animation.js"></script>
+<script src="src/misc/sigma.misc.bindEvents.js"></script>
+<script src="src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="src/misc/sigma.misc.drawHovers.js"></script>
+<script src="d3.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="jLouvain.js"></script>
+ <!-- Buttons core css -->
+    <link rel="stylesheet" href="buttons.css">
+
+    <!-- Only needed if you want support for dropdown menus -->
+    <script src="jquery.min.js"></script>
+    <script src="buttons.js"></script>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+
+<!--     <script src="classie.js"></script>
+<script src="selectFx.js"></script> -->
+
+
+</head>
+
+
+<!-- START SIGMA IMPORTS -->
+
+<!-- END SIGMA IMPORTS -->
+<body>
+    <div id="content_wrapper">
+
+<!--     <select id="dataCategory" >
+<option value="1" selected="selected" >data01</option>
+<option value="2" >data02</option>
+<option value="3" >data03</option>
+<option value="4" >data04</option>
+</select> -->
+
+    <span class="button-dropdown button-dropdown-primary" data-buttons="dropdown">
+      <button class="button button-primary " style="width:700px" >
+        <i class="fa fa-bars"></i> 选择数据集
+      </button>
+      <ul id="dataCategory" class="button-dropdown-list is-below">
+        <li value="1" selected="selected" ><a onclick=run('OUT03.txt','26517','130738',1)>数据集1（p2p_Gnutella24,顶点2万，边数13万）</a></li>
+        <li value="2" ><a onclick=run('OUT02.txt','22684','54705',2)> 数据集2（p2p_Gnutella30,点数3万，边数17万）</a></li>
+        <li value="3" ><a onclick=run('OUT03.txt','26517','130738',3)>数据集3（email_Enron,点数3万，边数36万）</a></li>
+        <li value="4" ><a onclick=run('OUT04.txt','22684','54705',4)> 数据集4（p2p_Gnutella31,点数6万，边数29万）</a></li>
+		<li value="4" ><a onclick=run('OUT05.txt','22684','54705',5)> 数据集5（amazon,点数26万，边数179万）</a></li>
+		<li value="4" ><a onclick=run('OUT06.txt','22684','54705',6)> 数据集6（com_dblp,点数42万，边数180万）</a></li>
+		<li value="4" ><a onclick=run('OUT07.txt','22684','54705',7)> 数据集7（amazon0505,点数41万，边数4787万）</a></li>
+          <li value="4" ><a onclick=run('OUT07.txt','22684','54705',7)> 数据集8（web_BerkStan,点数68万，边数1329万）</a></li>
+          <li value="4" ><a onclick=run('OUT07.txt','22684','54705',7)> 数据集9（roadNet_CA,点数197万，边数553万）</a></li>
+      </ul>
+    </span>
+    
+    
+<!--     <select class="cs-select cs-skin-slide">
+      <option value="sightseeing" data-class="icon-camera">Sight Seeing</option>
+      <option value="business" data-class="icon-money">Business</option>
+      <option value="honeymoon" data-class="icon-heart">Honeymoon</option>
+      <option value="food" data-class="icon-food">Gourmet</option>
+      <option value="shopping" data-class="icon-shirt">Shopping</option>
+</select> -->
+<!--    
+ <input type="button" value="Run" id='reset_btn' class="button button-pill button-action" /> -->
+    <!-- <input type="button" value="Run Community Detection" id='comm_detect' /> -->
+    <button id="p" class="button button-pill button-action" style="width:700px">自定义导入数据集:</label>
+    <input type="text"  id='filePath' />
+    <input type="button" value="导入" id='addNewData' class="button button-pill button-action" />
+    <a  href="page01.html">
+    <input type="button" value="返回" id='back' class="button button-pill button-action" />
+    </a>
+
+    </div>
+  </body>
+  <table>
+  <tr>
+  <td  width="300px">
+  <fieldset width="300px" height="600px" style="background:blue" >
+
+            <legend>数据集属性</legend>
+            <table>
+                <tr  >
+                    <td width="300px" height="200px">
+                        <fieldset height="180px" >
+                            <legend>数据集名称</legend>
+                            <input    type="text"  id="text1"   value=""/>
+                           
+                        </fieldset>
+                    </td>
+					</tr>
+					<tr>
+					
+                    <td width="300px" height="200px">
+                        <fieldset  width="300px" height="180px">
+                            <legend>边数</legend>
+                            <input   type="text"  id="text2"  value=""/>
+                            
+                        </fieldset>
+                    </td>
+					</tr>
+					<tr>
+					 <td width="800px" height="200px">
+                        <fieldset  width="300px" height="180px">
+                            <legend>边数</legend>
+                            <input   type="text"  id="text3"  value=""/>
+                            
+                        </fieldset>
+                    </td>
+					</tr>
+					
+                </tr>
+            </table>
+        </fieldset> 
+  <td>
+  <td>
+<div id="container">
+  <style>
+    #graph-container {
+      top: 10%;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+  </style>
+  <div id="graph-container"></div>
+</div>
+</td>
+</tr>
+</table>
+
+<script src="plugins/sigma.layouts.forceAtlas2/worker.js"></script>
+<script src="plugins/sigma.layouts.forceAtlas2/supervisor.js"></script>
+<script>
+/**
+ * Just a simple example to show how to use the sigma.layouts.forceAtlas2
+ * plugin:
+ *
+ * A random graph is generated, such that its nodes are separated in some
+ * distinct clusters. Each cluster has its own color, and the density of
+ * links is stronger inside the clusters. So, we expect the algorithm to
+ * regroup the nodes of each cluster.
+ */
+ var selected_filePath;
+ var selected_Nodes;
+ var selected_Edges;
+ 
+function run(selected_filePath,selected_Nodes,selected_Edges,id)
+{
+/*var selected_Data = document.getElementById("dataCategory").value;
+ 
+ console.log("selectbutton:  ",selected_Data);
+  if(selected_Data==1){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+  }
+  else if(selected_Data==2){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+  }
+  else if(selected_Data==3){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+  }
+  else{
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+  }
+  console.log('NUMBER',document.getElementById("dataCategory").value);*/
+    d3.json(selected_filePath,function(error,data)
+          {
+            
+            // var node_data02=[];
+            // for(var a=0;a<1000;a++){
+            //   node_data02.push(a);
+            // }
+           // console.log('node_data:',node_data02);
+		   
+		   //显示基本数据信息
+		   
+		  
+		 if(id==1)  
+		 {
+		     document.getElementById('text1').value = 'p2p_Gnutella24';
+		     document.getElementById('text2').value = '26517';
+		     document.getElementById('text3').value = '130738';
+		 }
+		  if(id==2)  
+		 {
+		     document.getElementById('text1').value = 'p2p_Gnutella30';
+		     document.getElementById('text2').value = '36682';
+		     document.getElementById('text3').value = '176656';
+		 }
+		  if(id==3)  
+		 {
+		     document.getElementById('text1').value = 'email_Enron';
+		     document.getElementById('text2').value = '36692';
+		     document.getElementById('text3').value = '367662';
+		 }
+		  if(id==4)  
+		 {
+		     document.getElementById('text1').value = 'p2p_Gnutella31';
+		     document.getElementById('text2').value = '62586';
+		     document.getElementById('text3').value = '295784';
+		 }
+		  if(id==5)  
+		 {
+		     document.getElementById('text1').value = 'amazon';
+		     document.getElementById('text2').value = '262110';
+		     document.getElementById('text3').value = '1799584';
+		 }
+		  if(id==6)  
+		 {
+		     document.getElementById('text1').value = 'com_dblp';
+		     document.getElementById('text2').value = '425957';
+		     document.getElementById('text3').value = '2099732';
+		 }
+		  if(id==7)  
+		 {
+		     document.getElementById('text1').value = 'amazon0505';
+		     document.getElementById('text2').value = '410236';
+		     document.getElementById('text3').value = '4878874';
+		 }
+		 
+		   
+		   
+            var edge_data02=data.edges01;
+            console.log('edge_data:',edge_data02);
+
+        var i,
+            s,
+            o,
+            N = selected_Nodes,
+            E = selected_Edges,
+            C = 5,
+            d = 0.5,
+            cs = [],
+            g = {
+              nodes: [],
+              edges: []
+            };
+
+        // Generate the graph:
+        for (i = 0; i < C; i++)
+          cs.push({
+            id: i,
+            nodes: [],
+            color: '#' + (
+              Math.floor(Math.random() * 16777215).toString(16) + '000000'
+            ).substr(0, 6)
+          });
+
+        for (i = 0; i < N; i++) {
+          o = cs[(Math.random() * C) | 0];
+          g.nodes.push({
+            id: 'n' + i,
+            label: 'Node' + i,
+            x: 100 * Math.cos(2 * i * Math.PI / N),
+            y: 100 * Math.sin(2 * i * Math.PI / N),
+            size: Math.random(),
+            color: o.color
+          });
+          o.nodes.push('n' + i);
+        }
+
+        for (i = 0; i < E; i++) {
+              var judge=1;
+              for(;judge>1;)
+              {
+                    judge++;
+                    var source_number=Math.random() * N;
+                    //if((typeof(edge_data02[i].source) === "undefined")&&(edge_data02[i].source===undefined)){
+                      if(!edge_data02[i].source){
+                      //console.log("source---defined");
+                      console.log(edge_data02[i].source);
+                      console.log("source---undefined"+i);
+                      source_number=Math.random() * N;
+                    }
+                    else{
+                      //source_number=Math.random() * N;
+                      source_number=Number(edge_data02[i].source);
+                    }
+                    var target_number=Math.random() * N;
+                   // if((typeof(edge_data02[i].target) === "undefined")&&(edge_data02[i].target===undefined)){
+                    if(!edge_data02[i].target){
+                     // console.log("target---defined");
+                     console.log(edge_data02[i].target);
+                     console.log("target---undefined"+i);
+                      target_number=Math.random() * N;
+                      
+                    }
+                    else{
+                      //target_number=Math.random() * N;
+                      target_number=Number(edge_data02[i].target);
+                    }
+                    if((!source_number)&&(!target_number))judge=judge-1;
+            }
+          if (Math.random() < 1 - d)
+          //if(1)
+            g.edges.push({
+              id: 'e' + i,
+              
+              // source: 'n' + ((Math.random() * N) | 0),
+              // target: 'n' + ((Math.random() * N) | 0)
+              source: 'n' + ((source_number) | 0),
+              target: 'n' + ((target_number) | 0)
+            });
+          else {
+            o = cs[(Math.random() * C) | 0]
+            g.edges.push({
+              id: 'e' + i,
+              source: o.nodes[(Math.random() * o.nodes.length) | 0],
+              target: o.nodes[(Math.random() * o.nodes.length) | 0]
+              // source: o.nodes[(source_number* o.nodes.length)| 0],
+              // target: o.nodes[(target_number* o.nodes.length) | 0]
+            });
+          }
+        }
+        console.log('edges:',g.edges);
+        s = new sigma({
+          graph: g,
+          container: 'graph-container',
+          settings: {
+            drawEdges: false
+          }
+        });
+
+        // Start the ForceAtlas2 algorithm:
+        var fa = s.startForceAtlas2({worker: true});
+        });
+
+      
+};
+
+
+//add new data ----start---function
+d3.select('#addNewData').on('click', function(){
+  var flag=false;
+  var selected_AddData = document.getElementById("filePath").value;
+  console.log("selectedFilePath:  ",selected_AddData);
+  if(selected_AddData=="OUT02.txt"){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=22684;
+    selected_Edges=54705;
+    flag=true;
+  }
+  else if(selected_AddData=="OUT03.txt"){
+    selected_filePath="OUT03.txt";
+    selected_Nodes=26517;
+    selected_Edges=130738;
+    flag=true;
+  }
+  else if(selected_AddData==3){
+    selected_filePath="OUT02.txt";
+    selected_Nodes=26517;
+    selected_Edges=130738;
+    flag=true;
+  }
+  else{
+    alert("Please Input Corrcet FilePath!");
+  } 
+      if(flag)
+     d3.json(selected_filePath,function(error,data)
+          {
+            
+            // var node_data02=[];
+            // for(var a=0;a<1000;a++){
+            //   node_data02.push(a);
+            // }
+           // console.log('node_data:',node_data02);
+            var edge_data02=data.edges01;
+            console.log('edge_data:',edge_data02);
+
+        var i,
+            s,
+            o,
+            N = selected_Nodes,
+            E = selected_Edges,
+            C = 5,
+            d = 0.5,
+            cs = [],
+            g = {
+              nodes: [],
+              edges: []
+            };
+
+        // Generate the graph:
+        for (i = 0; i < C; i++)
+          cs.push({
+            id: i,
+            nodes: [],
+            color: '#' + (
+              Math.floor(Math.random() * 16777215).toString(16) + '000000'
+            ).substr(0, 6)
+          });
+
+        for (i = 0; i < N; i++) {
+          o = cs[(Math.random() * C) | 0];
+          g.nodes.push({
+            id: 'n' + i,
+            label: 'Node' + i,
+            x: 100 * Math.cos(2 * i * Math.PI / N),
+            y: 100 * Math.sin(2 * i * Math.PI / N),
+            size: Math.random(),
+            color: o.color
+          });
+          o.nodes.push('n' + i);
+        }
+
+        for (i = 0; i < E; i++) {
+              var judge=1;
+              for(;judge>1;)
+              {
+                    judge++;
+                    var source_number=Math.random() * N;
+                    //if((typeof(edge_data02[i].source) === "undefined")&&(edge_data02[i].source===undefined)){
+                      if(!edge_data02[i].source){
+                      //console.log("source---defined");
+                      console.log(edge_data02[i].source);
+                      console.log("source---undefined"+i);
+                      source_number=Math.random() * N;
+                    }
+                    else{
+                      //source_number=Math.random() * N;
+                      source_number=Number(edge_data02[i].source);
+                    }
+                    var target_number=Math.random() * N;
+                   // if((typeof(edge_data02[i].target) === "undefined")&&(edge_data02[i].target===undefined)){
+                    if(!edge_data02[i].target){
+                     // console.log("target---defined");
+                     console.log(edge_data02[i].target);
+                     console.log("target---undefined"+i);
+                      target_number=Math.random() * N;
+                      
+                    }
+                    else{
+                      //target_number=Math.random() * N;
+                      target_number=Number(edge_data02[i].target);
+                    }
+                    if((!source_number)&&(!target_number))judge=judge-1;
+            }
+          if (Math.random() < 1 - d)
+          //if(1)
+            g.edges.push({
+              id: 'e' + i,
+              
+              // source: 'n' + ((Math.random() * N) | 0),
+              // target: 'n' + ((Math.random() * N) | 0)
+              source: 'n' + ((source_number) | 0),
+              target: 'n' + ((target_number) | 0)
+            });
+          else {
+            o = cs[(Math.random() * C) | 0]
+            g.edges.push({
+              id: 'e' + i,
+              source: o.nodes[(Math.random() * o.nodes.length) | 0],
+              target: o.nodes[(Math.random() * o.nodes.length) | 0]
+              // source: o.nodes[(source_number* o.nodes.length)| 0],
+              // target: o.nodes[(target_number* o.nodes.length) | 0]
+            });
+          }
+        }
+        console.log('edges:',g.edges);
+        s = new sigma({
+          graph: g,
+          container: 'graph-container',
+          settings: {
+            drawEdges: false
+          }
+        });
+
+        // Start the ForceAtlas2 algorithm:
+		alert('算法正在运行');
+        var fa = s.startForceAtlas2({worker: true});
+        });
+      
+  });
+ 
+</script>
+</html>

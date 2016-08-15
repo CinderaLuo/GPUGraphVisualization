@@ -1,0 +1,189 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="d3.min.js" charset="utf-8"></script>
+   
+    <!-- Buttons core css -->
+    <link rel="stylesheet" href="buttons.css">
+
+    <!-- Only needed if you want support for dropdown menus -->
+    <script src="jquery.min.js"></script>
+    <script type="text/javascript" src="buttons.js"></script>
+
+    <!-- Only needed if you want font icons  href="#" -->
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
+  </head>
+
+
+  <body>
+  
+  
+  <div  style="width:100%">
+    <div class="button-group"  style="text-align:center"  >
+      <span class="button-dropdown button-dropdown-primary" data-buttons="dropdown">
+      <button  width="600px"   class="button button-primary " style="width:600px; margin:auto"  >
+        <i class="fa fa-bars"></i> 选择数据集
+      </button>
+   
+      <ul class="button-dropdown-list is-below">
+        <li  ><a  onclick=show('img1','p2p_Gnutella24数据集','顶点2万','边13万')><i class="fa fa-heart-o"></i> p2p_Gnutella24数据集(顶点2万，边13万)</a></li>
+        <li  ><a  onclick=show('img2','p2p_Gnutella30数据集','顶点3万','边17万')>p2p_Gnutella30数据集(顶点3万，边17万)</a></li>
+		 <li  ><a  onclick=show('img3','email_Enron数据集','顶点3万','边36万')>email_Enron数据集(顶点3万，边36万)</a></li>
+		  <li  ><a  onclick=show('img4','p2p_Gnutella31数据集','顶点6万','边29万')>p2p_Gnutella31数据集(顶点6万，边29万)</a></li>
+		   <li  ><a  onclick=show('img5','amazon数据集','顶点26万','边179万')>amazon数据集(顶点26万，边179万)</a></li>
+		    <li  ><a  onclick=show('img6','com_dblp数据集','顶点42万','边209万')>com_dblp数据集(顶点42万，边209万)</a></li>
+			 <li  ><a  onclick=show('img7','amazon0505数据集','顶点41万','边487万')>amazon0505数据集(顶点41万，边487万)</a></li>
+			  <li  ><a  onclick=show('img8','web_BerkStan数据集','顶点68万','边1329万')>web_BerkStan数据集(顶点68万，边1329万)</a></li>
+                 <li  ><a  onclick=show('img9','数据集','顶点197万','边553万')>数据集8(顶点197万，边553万)</a></li>
+
+
+
+      </ul>
+    </span>
+
+<!--     <button type="button" class="button button-pill button-action"  value="1">GPU</button> -->
+    <a  href="big_graph_step.html">
+      <button type="button " class="button button-pill button-action"  style="width:600px"  >效果演示</button>
+    </a>
+
+<!--     <a  href="css01.html"><input  type = "button" class="button button-pill button-action"/> 
+</a> -->
+  
+
+  </div>
+  </div>
+
+   <fieldset width="1100px"  style="background:#CCFFFF">
+
+            <legend>数据集属性</legend>
+            <table>
+                <tr  >
+                    <td width="400px">
+                        <fieldset  >
+                            <legend>数据集名称</legend>
+                            <input    type="text"  id="text1"   value=""/>
+                           
+                        </fieldset>
+                    </td>
+					
+                    <td width="400px">
+                        <fieldset  width="300px">
+                            <legend>边数</legend>
+                            <input   type="text"  id="text2"  value=""/>
+                            
+                        </fieldset>
+                    </td>
+					
+					 <td width="400px">
+                        <fieldset  width="300px">
+                            <legend>边数</legend>
+                            <input   type="text"  id="text3"  value=""/>
+                            
+                        </fieldset>
+                    </td>
+					
+					
+                </tr>
+            </table>
+        </fieldset>
+		
+  
+  <img src='pic01.png' style='display:none' id='img1' weight="500" height="500"/>
+  
+  <img src='pic02.png' style='display:none' id='img2' weight="500" height="500"/>
+  
+  <img src='pic03.png' style='display:none' id='img3' weight="500" height="500"/>
+  
+  <img src='pic04.png' style='display:none' id='img4' weight="500" height="500"/>
+  
+  <img src='pic05.png' style='display:none' id='img5' weight="500" height="500"/>
+  
+  <img src='pic06.png' style='display:none' id='img6' weight="500" height="500"/>
+ 
+  <img src='pic07.png' style='display:none' id='img7' weight="500" height="500"/>
+   
+  <img src='pic07.png' style='display:none' id='img8' weight="500" height="500"/>
+  <img src='pic07.png' style='display:none' id='img9' weight="500" height="500"/>
+
+
+   <div>
+ 
+ <script>
+ function show(id1,value1,value2,value3)
+ {
+     document.getElementById("img1").style.display="none";
+     document.getElementById("img2").style.display="none";
+     document.getElementById("img3").style.display="none";
+     document.getElementById("img4").style.display="none";
+     document.getElementById("img5").style.display="none";
+     document.getElementById("img6").style.display="none";
+     document.getElementById("img7").style.display="none";
+     document.getElementById("img8").style.display="none";
+     document.getElementById("img9").style.display="none";
+
+
+
+
+    //if(img.style.display == "block")
+    //{
+        //document.getElementById(id1).style.display = "none";
+		
+		
+    //}
+    //else if(document.getElementById(id1).style.display == "none")
+    //{
+       // var anchors = document.getElementsByTagName("img");
+       // for(var a in anchors)
+      //  {
+          //   a.style.display="none";
+
+       // }
+        document.getElementById(id1).style.display = "block";
+
+		document.getElementById('text1').value = value1;
+		document.getElementById('text2').value = value2;
+		document.getElementById('text3').value = value3;
+		
+    //}
+
+ }
+/*
+ d3.select('#sel01').on('click', function()
+ {
+     var i,hf;
+   i=document.getElementById('sel').value;
+   console.log('VALUE',i);
+   if(i == 1)
+     hf="1.png";
+   else if(i == 2)
+     hf="2.png";
+   else if(i == 3)
+     hf="3.png";
+   else 
+     hf="1.png"
+ 
+   document.write('<img src="'+hf+'" weight="500" height="500"/>');
+   document.write('<img src="1.png" weight="500" height="500"/>');
+ });
+  d3.select('#sel02').on('click', function()
+ {
+   document.write('<img src="2.png" weight="500" height="500"/>');
+ });
+ d3.select('#sel03').on('click', function()
+ {
+   document.write('<img src="3.png" weight="500" height="500"/>');
+ });
+ d3.select('#sel04').on('click', function()
+ {
+   document.write('<img src="2.png" weight="500" height="500"/>');
+ });
+ */
+ 
+ </script>
+ </div>
+
+  </body>
+
+  <!-- <img src="1.png" weight="500" height="500"></img> -->
+
+  </html>

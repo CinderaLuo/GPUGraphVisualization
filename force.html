@@ -1,0 +1,960 @@
+<html>  
+  <head>  
+        <meta charset="utf-8">  
+        <title>力导向图</title>  
+  </head> 
+
+<style>
+
+
+</style>
+   <body>  
+		 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		   <fieldset  style="background:#00FFCC">
+			   <legend>社交图演示</legend>
+
+
+			   <div><iframe width="1600px" height="600" src="http://www.ourd3js.com/demo/J-2.0/relationforce.html" marginwidth="0" marginheight="0" scrolling="no"></iframe></div>
+          </fieldset>
+
+			 <div  style="background:#CCFFFF">
+				 <fieldset >
+					 <legend>基本功能区</legend>
+<table > 
+
+<tr  width=1600px>
+<td  width=800px    >
+<fieldset > 
+<legend>添加微博用户（顶点）</legend>
+<table > 
+<tbody> 
+<tr ><td class=“left” width=40% align="right"><label for="t1">微博名称：</label></td> 
+<td class="right"><input type="text" id="t1" name="Name"></td> 
+</tr> 
+
+<tr><td class=“left” width=40% align="right" rowspan=2> 
+<input id="Submit1" type="button" onclick="add_node()" style="color: green" value="提 交" />
+</td> 
+<td> <input id="Reset1" type="reset" style="color: red " value="重 置" />
+</td> 
+</tr> 
+</tbody> 
+</table> 
+</fieldset> 
+</td>
+<td  width=800px   >
+<fieldset > 
+<legend>互粉（构成一条边）</legend>
+<table > 
+<tbody> 
+<tr><td class=“left” width=40% align="right">原顶点（追粉博主）：</td> 
+<td><select id="selc1" name="place"> 
+<option value="quanzhou">泉州</option> 
+<option value="xiamen">厦门</option> 
+<option value="zhangzhou" >漳州</option> 
+</select> 
+</td> 
+</tr> 
+<tr><td class=“left” width=40% align="right">目的点（被粉博主）：</td> 
+<td><select id="selc2" name="place"> 
+<option value="quanzhou">泉州</option> 
+<option value="xiamen">厦门</option> 
+<option value="zhangzhou" >漳州</option> 
+</select> 
+</td> 
+</tr> 
+<tr><td class=“left” width=40% align="right" rowspan=2> 
+<input id="Submit1" type="button"  onclick="add_edge()" style="color: green" value="提 交" />
+</td> 
+<td> <input id="Reset1" type="button"style="color: red" value="重 置" />
+</td> 
+</tr> 
+</tbody> 
+</table> 
+</fieldset> 
+</td>
+</tr>
+
+</table>
+				 </fieldset>
+</div>
+
+<div   width=1600px  height=400px  style="background:#CCFFFF">
+	<fieldset  >
+		<legend>结果显示区</legend>
+
+
+
+
+ <table >
+	<tr>
+	  <td   width=800px>
+			  
+			     <fieldset > 
+                       <legend>博主信息</legend>
+					       <div >
+						       <table  id="table1"></table>
+						   </div>
+				 </fieldset>
+			   
+	  </td>
+	  <td  width=800px >
+			<fieldset > 
+			     <legend>互粉关系</legend>
+			            <div >
+						       <table  id="table2"></table>
+						</div>
+			 </fieldset> 
+	  </td>
+   </tr>
+</table>
+
+	</fieldset>
+</div>
+
+
+<div   id="container"  width=1600px  height=200  style="background:#CCFFFF">
+	<fieldset >
+		<legend>迭代分析区</legend>
+         <table  id="table3"  width=800px>
+		</table>
+		</fieldset>
+</div>
+<div    width="1600px"   style="background:#CCFFFF">
+	<fieldset >
+		<legend>操作演示控件</legend>
+       	
+		<input   type="text"  id="text1"  value="迭代次数"/>
+        <input   type="text"  id="text2"  value="迭代次数"/>
+		<input   type="button" value="计算" id='comm_detect1' style="color: green"/>
+		<input   type="button" value="迭代一次" id='comm_detect'  style="color: red"/>
+		</fieldset>
+<div>
+	<div  id="div2" width="1600px" style="background:#CCFFFF">
+
+	</div>
+  
+		
+<script>		
+         // LPA算法
+   var  num=0;
+   function sleep(numberMillis) 
+  {
+    var now = new Date();
+    var exitTime = now.getTime() + numberMillis;
+    while (true) 
+	{
+      now = new Date();
+      if (now.getTime() > exitTime)
+      return;
+    }
+} 
+    var Vertex=7;
+	var  over=0;
+    var  Lable_t=new Array(100);//存放各个点的标签,t时刻
+    var  Lable_t_1=new Array(Vertex);//存放各个点的标签,t-1时刻
+    var  Importance_sorting=new Array(Vertex);//存放各个点的重要￿
+    var  Vertex_neighbour_lable=new Array(Vertex);//存放邻居节点的标签个
+    var  Sum_degree=new Array(Vertex);//存放邻居节点的标签个
+    var  Adjmartrix=new Array(Vertex);//存放邻接矩阵
+    /**********************
+     * 对排过序的每个元素进行标签赋￿
+     * 把孤立节点排除在￿
+     * *************************/
+
+    var  Iteration=0;
+
+   var  Edge_graph=[[1,2],[1,3],[2,3],[3,4],[4,5],[7,5],[6,5],[6,7]];
+	  //var  Edge_graph=[[2,1],[2,3],[4,3],[4,5]];
+	  var  aaaa=new  Array(Vertex);
+    //int Edge_graph[][]={{1,2},{1,3},{2,3},{4,5},{5,6}};
+    //int Edge_graph[][]={{1,4},{1,5},{1,6},{2,3},{2,7},{3,4},{3,7},{4,6},{5,6},{5,8},{6,7},{6,16},{7,14},{8,9},{8,11},{8,12},{9,10},{10,11},{10,13},{11,12},{11,16},{12,13},{14,15},{14,18},{15,17},{15,19},{15,20},{16,17},{16,20},{16,21},{18,19},{19,20},{19,21},};
+    /**********************初始￿************************/
+	function  init()
+	{
+      Initing(Edge_graph);
+      Ininting_Degree_Sorting(Edge_graph);//对重要度进行排序，亦是随机序￿
+    }
+	init();
+    /*****************对每一个节点，返回所有邻居中某标签数最多的标签￿****************/
+	function community( )
+	{
+	init();
+    while(!equal(Lable_t,Iteration,aaaa)&&Iteration<=20)
+    {
+
+        Iteration++;
+        Lable_Spread(Iteration);	
+    }
+	
+	var a="";
+		for(var i=0;i<Vertex;i++)
+		{
+		    a+=i+"->"+Lable_t[Iteration][i]+";";
+		}
+
+	 document.getElementById('text1').value="总的迭代次数:"+Iteration;
+     document.getElementById('text2').value="迭代次数过程：";
+ }
+   function  equal(a1 ,t, temp) 
+     {
+         var exists = true;
+
+         for (var i = 0 ; i < Vertex; i++)
+		 {
+            
+                 if (a1[t][i] != temp[i]) 
+                 {
+                     return false;
+                 }
+             
+         }
+         return   true;
+     }
+
+
+    /**********************数据初始￿************************/
+    function  Initing(edge){//
+			for(var i=0;i<100;i++)
+			{
+				Lable_t[i]=new  Array(100);
+				for( var j=0;j<100;j++)
+				{
+				   
+				     Lable_t[i][j]=0;
+				
+				  
+				}
+			
+			}
+	
+		for(var i=0;i<100;i++)
+		{
+		   Adjmartrix[i]=new  Array(Vertex);
+		   for(var j=0;j<100;j++)
+		   {
+		    
+              Adjmartrix[i][j]=0;
+              
+           }
+			
+	      
+		}
+        for(var i=0;i<edge.length;i++){
+		    
+             Adjmartrix[edge[i][0]-1][edge[i][1]-1]=1;
+             Adjmartrix[edge[i][1]-1][edge[i][0]-1]=1;
+        }
+        //Arrays.fill(Sum_degree,0);
+        for(var i=0;i<Vertex;i++){//对每个节点进行赋值标签，初始化为下标￿
+			 Lable_t[0][i]=i;
+			 Importance_sorting[i]=0;
+             aaaa[i]=0;
+             Vertex_neighbour_lable[i]=0;
+        }
+    }
+
+    /**********************选择更新策略*************************/
+    function Lable_Spread(){
+        for(var i=0;i<Vertex;i++)
+		  {  
+              aaaa[i]=Lable_t[Iteration-1][i];
+			  Lable_t[Iteration][i]=aaaa[i];
+		  }
+        Lable_Update(Iteration);
+
+    }
+    /**********************选择标签*************************/
+    function  Lable_Select(v,t){
+        var vertex_lable_select = 0;
+        Lable_count(v,t);
+        var max=-1;
+        for(var i=0;i<Vertex;i++){
+            if(max<Vertex_neighbour_lable[Importance_sorting[i]]){
+                max=Vertex_neighbour_lable[Importance_sorting[i]];
+                vertex_lable_select=Importance_sorting[i];
+            }
+        }
+        for(var  i=0;i<Vertex;i++)
+		{  //对每个节点所属的标签的个数进行赋值，
+            Vertex_neighbour_lable[i]=0;
+        }
+
+        return vertex_lable_select;
+    }
+    /**********************标签更新*************************/
+    function Lable_Update(t){
+        for(var  i=0;i<Vertex;i++){
+            if(Is_isolated_vertex(Importance_sorting[i]))
+			{
+                var temp=Importance_sorting[i];
+                Lable_t[t][temp]=Lable_Select(temp,t);
+            }
+
+        }
+
+    }
+    /**********************对邻居节点标签个数进行初始化,采用同步更新*************************/
+    function Lable_count(v,t){//
+        for(var  i=0;i<Vertex;i++){
+            if(Adjmartrix[v][i]>0)
+			{//对邻居节点标签个数进行更新
+                  //Vertex_neighbour_lable[aaaa[i]+=1;
+				  var  a=aaaa[i];
+				  Vertex_neighbour_lable[a]+=1;
+            }
+        }
+
+    }
+    /**********************对重要度进行排序*************************/
+    function  Ininting_Degree_Sorting(Edge){//对每个节点进行赋值标签，初始化为下标￿
+        var  Degree_array_temp=new Array(Vertex);
+        var max=-1;
+        var  temp=0;
+		Degree_array_temp[i]=new  Array(2);
+        var  visited=new Array(Vertex);
+        for(var i=0;i<Vertex;i++){
+            Degree_array_temp[i]= new  Array(2);
+            Degree_array_temp[i][0]=0;
+            Degree_array_temp[i][1]=i;
+            visited[i]=0;
+        }
+        for(var i=0;i<Edge.length;i++){
+            Degree_array_temp[Edge[i][0]-1][0]=Degree_array_temp[Edge[i][0]-1][0]+1;
+            Degree_array_temp[Edge[i][1]-1][0]=Degree_array_temp[Edge[i][1]-1][0]+1;
+        }
+        for(var  i=0;i<Degree_array_temp.length;i++){
+            for(var j=0;j<Degree_array_temp.length;j++){
+                if(max<Degree_array_temp[j][0]&&visited[j]==0){
+                      max=Degree_array_temp[j][0];
+                      temp=j;
+                }
+            }
+            max=-1;
+            visited[temp]=1;
+            Importance_sorting[i]=temp;
+        }
+    }
+    /**********************统计每个结点度的个数*************************/
+    function  Sum_degree_vertex(edge){
+        for(var i=0;i<edge.length;i++){
+            Sum_degree[edge[i][0]-1]=Sum_degree[edge[i][0]-1]+1;
+            Sum_degree[edge[i][1]-1]=Sum_degree[edge[i][1]-1]+1;
+        }
+        //System.out.println("Sum_degree_vertex:");
+    }
+    /**********************判断是否是孤立节￿************************/
+    function  Is_isolated_vertex(v)
+	{
+        var temp=0;
+        for(var  i=0;i<Adjmartrix.length;i++)
+		{
+            if(Adjmartrix[v][i]>0)
+			{//对邻居节点标签个数进行初始化
+                temp++;
+            }
+        }
+        //System.out.println("Is_isolated_vertex:");
+        if(temp>0)
+             return true;
+        else
+            return false;
+
+    }
+//LPA 算法
+//g功能算法
+
+
+
+
+					   
+		var nodes =  [ { name: "吴亦凡"    }, { name:  "刘德华" },
+					  { name: "刘亦菲"    }, { name:  "范冰冰"   },
+					  { name: "景甜"   },  { name:  "韩庚"   },
+					  { name: "周杰伦"    } ];
+					 
+		var edges = [  { source : 0  , target: 1 } ,   { source :  1 ,   target:   2 } ,
+					   { source : 0  , target: 3 } ,   { source :  2 ,   target:   3 } ,
+					   { source : 3 , target:  4 } ,   { source : 6 ,   target:    4 } ,
+					   { source : 5 , target:  4 } ,   { source : 5 ,   target:    6 } ];	
+		
+		var width =  800;
+		var height = 400;
+		
+	    //var b1={ name:"合肥"};
+	    // nodes.push(b1);
+		 //var div = d3.select("body").append("div");   //在body里添加一个div
+		 //var svg = div.append("svg");  //在div里添加svg
+
+	   
+		
+		var svg = d3.select("body")
+					.append("svg")
+					.attr("width",width)
+					.attr("height",height);
+		
+		var force = d3.layout.force()
+				.nodes(nodes)		//指定节点数组
+				.links(edges)		//指定连线数组
+				.size([width,height])	//指定范围
+				.linkDistance(150)	//指定连线长度
+				.charge(-400);	//相互之间的作用力
+		 var    svg_edges;
+		 var  svg_nodes;
+		 var svg_texts;
+		 var color = d3.scale.category20();
+		force.start();	//开始作用
+
+		console.log(nodes);
+		console.log(edges);
+		/*
+		//添加连线		
+		var svg_edges = svg.selectAll("line")
+							.data(edges)
+							.enter()
+							.append("line")
+							.style("stroke","#ccc")
+							.style("stroke-width",1);
+		
+		var color = d3.scale.category20();
+				
+		//添加节点			
+		var svg_nodes = svg.selectAll("circle")
+							.data(nodes)
+							.enter()
+							.append("circle")
+							.attr("r",20)
+							.style("fill",function(d,i){
+								return color(i);
+							})
+							.call(force.drag);	//使得节点能够拖动
+
+		//添加描述节点的文字
+		var svg_texts = svg.selectAll("text")
+							.data(nodes)
+							.enter()
+							.append("text")
+							.style("fill", "black")
+							.attr("dx", 20)
+							.attr("dy", 8)
+							.text(function(d){
+								return d.name;
+							});
+					
+
+		force.on("tick", function(){	    //对于每一个时间间隔
+		
+			 //更新连线坐标
+			 svg_edges.data(edges)
+			         .attr("x1",function(d){ return d.source.x; })
+			 		 .attr("y1",function(d){ return d.source.y; })
+			 		 .attr("x2",function(d){ return d.target.x; })
+			 		 .attr("y2",function(d){ return d.target.y; });
+			 
+			 //更新节点坐标
+			 svg_nodes.data(nodes)
+			        .attr("cx",function(d){ return d.x; })
+			 		.attr("cy",function(d){ return d.y; })
+					.style("fill",function(d,i){
+								return color(Lable_t[num][i]);
+							});
+
+			 //更新文字坐标
+			 svg_texts.data(nodes)
+			     .attr("x", function(d){ return d.x; })
+			 	.attr("y", function(d){ return d.y; });
+		});*/
+		
+		
+ d3.select('#comm_detect').on('click', function(){
+   
+     //var color = d3.scale.category20().domain(d3.range([0, max_community_number]));
+	 num++;
+	 
+	 if(num<=Iteration)
+	 {
+           
+	   
+
+	      
+            svg_edges.data(edges)
+			         .attr("x1",function(d){ return d.source.x; })
+			 		 .attr("y1",function(d){ return d.source.y; })
+			 		 .attr("x2",function(d){ return d.target.x; })
+			 		 .attr("y2",function(d){ return d.target.y; });
+			 
+			 //更新节点坐标
+			 svg_nodes.data(nodes)
+			        .attr("cx",function(d){ return d.x; })
+			 		.attr("cy",function(d){ return d.y; })
+                    .style("fill",function(d,i){
+								return color(Lable_t[num][i]);
+							});
+								//return color(Lable_t[num++][i]);});
+			 //更新文字坐标
+			 svg_texts.data(nodes)
+			         .attr("x", function(d){ return d.x; })
+			 	     .attr("y", function(d){ return d.y; });
+	         createTable3();
+		     draw7();
+			 document.getElementById('text2').value="迭代次数过程："+num;
+	 }
+	 if(num>Iteration)
+	 {
+	      
+		  num=Iteration;
+	 }
+	
+	
+	
+  });
+  //LPA计算
+  d3.select('#comm_detect1').on('click', function(){
+	        Iteration=0;
+	        num=0;
+            community();
+           draw7();
+	        
+	 
+	
+	
+	
+	
+  });
+ //
+		
+  function  createTable1()
+  {
+      var table =  document.getElementById('table1');
+      var len = table.rows.length; 
+       for(var i =len-1;i >=0;i--)
+	  {
+         table.deleteRow(i);
+      }
+      var tr = table.insertRow ();
+      var str = "博主编号,博主名称".split(",");
+      for (var i = 0; i < str.length; i++)
+      {
+          var c =tr.insertCell();
+          c.innerHTML = str[i];
+      }
+      for(var i=0;i<nodes.length;i++)
+      {
+          var tr = table.insertRow ();
+          var c =tr.insertCell();
+          c.innerHTML = i;
+          var d =tr.insertCell();
+          d.innerHTML =nodes[i].name;
+
+      }
+     
+  }
+ 
+  createTable1();
+
+  function  createTable2()
+  {
+      var table =  document.getElementById('table2');
+	  //先删除
+	  var len = table.rows.length; 
+      for(var i =len-1;i >=0;i--)
+	  {
+         table.deleteRow(i);
+     }
+	 //再添加
+      var tr = table.insertRow ();
+      var str = "追粉者,-------------,被粉者".split(",");
+      for (var i = 0; i < str.length; i++)
+      {
+          var c =tr.insertCell();
+          c.innerHTML = str[i];
+		  c.border=1;
+		  c.cellspcing=16;
+		  
+      }
+      for(var i=0;i<edges.length;i++)
+      {
+          var tr = table.insertRow ();
+          var c =tr.insertCell();
+          c.innerHTML = nodes[Edge_graph[i][0]-1].name+"   ";
+		  var f =tr.insertCell();
+          f.innerHTML = "----关注了---   ";
+		  
+          var d =tr.insertCell();
+          d.innerHTML = nodes[Edge_graph[i][1]-1].name+"   ";
+          
+
+      }
+     
+  }
+  function   bindnodelist()
+{
+      var   select1=document.getElementById('selc1');
+	  var   select2=document.getElementById('selc2');
+	
+	    select1.options.length=0;
+		select2.options.length=0;
+		
+	    for(var i=0;i<nodes.length;i++)
+		{
+		     //select1.options.length = select1.options.length+1;
+             //var option = new Option(nodes[i].name,i,false,true);
+             //select1.options[select1.options.length-1]= option;
+	         select1.options.add(new Option(nodes[i].name,i));
+			 select2.options.add(new Option(nodes[i].name,i));
+			
+        }
+	
+
+
+}
+
+
+function   add_node( )
+{
+     var   cityname=document.getElementById('t1').value;
+     var b1={name:cityname};
+	 nodes.push(b1);
+	 Vertex++;
+	     //var a=1;
+	     //var  b=5;
+	    // var  a0={source :a,target:b};
+	     //edges.push(a0);
+	    // var  m=[2,6];
+	     // Edge_graph.push(m);
+         // var aa={ name : name1};
+	   // nodes.push(aa);
+	 //更新图：
+	 draw7();
+	 createTable1();
+	 bindnodelist();
+      
+
+}
+
+function   add_edge()
+{      
+       var obj1=document.getElementById('selc1');
+	   var obj2=document.getElementById('selc2');
+       var m1=parseInt(obj1.options[obj1.selectedIndex].value);
+	   var m2=parseInt(obj2.options[obj2.selectedIndex].value);
+	   var  a0={source:m1,target:m2};
+	   edges.push(a0);
+	   var m=[m1+1,m2+1];
+	   Edge_graph.push(m);
+	   
+	   createTable2();
+	   draw7();
+       
+   
+
+}
+//添加动态过程显示表格
+ function  createTable3()
+  {
+      var table =  document.getElementById('table3');
+      var tr = table.insertRow ();
+      var c =tr.insertCell();
+	 // tr.background-color="blue";
+      c.innerHTML = "第"+num+"次迭代的结果：";
+	  var tr1 = table.insertRow ();
+      for(var i=0;i<nodes.length;i++)
+      {
+          
+          var c =tr1.insertCell();
+		  c.bolder="20px";
+          c.innerHTML = i +"的朋友圈为"+Lable_t[num][i];
+         
+         
+      }
+     
+  }
+  function  init_createTable3()
+  {
+      var table =  document.getElementById('table3');
+      var tr = table.insertRow ();
+      var c =tr.insertCell();
+	 // tr.background-color="blue";
+      c.innerHTML = "第"+num+"次迭代的结果：";
+	  var tr1 = table.insertRow ();
+      for(var i=0;i<nodes.length;i++)
+      {
+          
+          var c =tr1.insertCell();
+		  c.bolder="20px";
+          c.innerHTML = i +"的朋友圈为"+Lable_t[0][i];
+         
+         
+      }
+     
+  }
+function draw()
+{
+        
+		
+		
+	    var   svg_edges = svg.selectAll("line")
+							.data(edges);
+		var    enteredge=svg_edges.enter();
+        var    exitedge=	svg_edges.exit();
+		     svg_edges.attr("x1",function(d){ return d.source.x; })
+			 		  .attr("y1",function(d){ return d.source.y; })
+			 		  .attr("x2",function(d){ return d.target.x; })
+			 		  .attr("y2",function(d){ return d.target.y; });
+		     enteredge.append("line")
+			         .attr("x1",function(d){ return d.source.x; })
+			 		 .attr("y1",function(d){ return d.source.y; })
+			 		 .attr("x2",function(d){ return d.target.x; })
+			 		 .attr("y2",function(d){ return d.target.y; });
+			  exitedge.remove();		 
+		var color = d3.scale.category20();
+				
+		//添加节点	
+        var  nodeupdate=svg.selectAll("circle")
+							       .data(nodes);
+        var   enternode=nodeupdate.enter();
+        var   exitnode=nodeupdate.exit();	
+		
+		nodeupdate  .attr("cx",function(d){ return d.x; })
+			 		.attr("cy",function(d){ return d.y; })
+					.style("fill",function(d,i){
+								 return color(Lable_t[num][i]);
+							});
+		enternode.append("circle")
+		           .attr("cx",function(d){ return d.x; })
+			 	   .attr("cy",function(d){ return d.y; })
+				   .style("fill",function(d,i){
+								return color(Lable_t[num][i]);
+							});
+		exitnode.remove();
+		
+		var  textupdate=svg.selectAll("text")
+							.data(nodes);
+        var   entertext=textupdate.enter();
+        var   exittext=textupdate.exit();	
+		
+		textupdate .attr("x", function(d){ return d.x; })
+			 	   .attr("y", function(d){ return d.y; });
+		entertext.append("text")
+		           .attr("x", function(d){ return d.x; })
+			 	   .attr("y", function(d){ return d.y; });
+		exittext.remove();
+		
+}
+
+ //重新画图
+function  draw3()
+{
+     
+		var svg = d3.select("body")
+					 .append("svg")
+					 .attr("width",width)
+					 .attr("height",height);
+		
+		var force = d3.layout.force()
+				.nodes(nodes)		//指定节点数组
+				.links(edges)		//指定连线数组
+				.size([width,height])	//指定范围
+				.linkDistance(150)	//指定连线长度
+				.charge(-400);	//相互之间的作用力
+
+		force.start();	//开始作用
+
+		console.log(nodes);
+		console.log(edges);
+		
+		//添加连线		
+		var svg_edges = svg.selectAll("line")
+							.data(edges)
+							.enter()
+							.append("line")
+							.style("stroke","#ccc")
+							.style("stroke-width",1);
+		
+		var color = d3.scale.category20();
+				
+		//添加节点			
+		var svg_nodes = svg.selectAll("circle")
+							.data(nodes)
+							.enter()
+							.append("circle")
+							.attr("r",20)
+							.style("fill",function(d,i){
+								return color(i);
+							})
+							.call(force.drag);	//使得节点能够拖动
+
+		//添加描述节点的文字
+		var svg_texts = svg.selectAll("text")
+							.data(nodes)
+							.enter()
+							.append("text")
+							.style("fill", "black")
+							.attr("dx", 20)
+							.attr("dy", 8)
+							.text(function(d){
+								return d.name;
+							});
+					
+
+		force.on("tick", function(){	    //对于每一个时间间隔
+		
+			 //更新连线坐标
+			 svg_edges.data(edges)
+			         .attr("x1",function(d){ return d.source.x; })
+			 		 .attr("y1",function(d){ return d.source.y; })
+			 		 .attr("x2",function(d){ return d.target.x; })
+			 		 .attr("y2",function(d){ return d.target.y; });
+			 
+			 //更新节点坐标
+			 svg_nodes.data(nodes)
+			        .attr("cx",function(d){ return d.x; })
+			 		.attr("cy",function(d){ return d.y; })
+					.style("fill",function(d,i){
+								return color(Lable_t[num][i]);
+							});
+
+			 //更新文字坐标
+			 svg_texts.data(nodes)
+			     .attr("x", function(d){ return d.x; })
+			 	.attr("y", function(d){ return d.y; });
+		});
+	
+	
+	
+}
+function draw1()
+{
+       
+	 force = d3.layout.force()
+				.nodes(nodes)		//指定节点数组
+				.links(edges)		//指定连线数组
+				.size([width,height])	//指定范围
+				.linkDistance(500)	//指定连线长度
+				.charge(-400);	//相互之间的作用力
+
+	  force.start();	//开始作用
+	   
+	  svg_edges.data(edges)
+	                 .attr("x1",function(d){ return d.source.x; })
+			 		 .attr("y1",function(d){ return d.source.y; })
+			 		 .attr("x2",function(d){ return d.target.x; })
+			 		 .attr("y2",function(d){ return d.target.y; });
+			 
+      //更新节点坐标
+	  svg_nodes.data(nodes)
+	                .attr("cx",function(d){ return d.x; })
+			 		.attr("cy",function(d){ return d.y; })
+                    .style("fill",function(d,i){
+								return color(Lable_t[num][i]);
+							});
+								
+      //更新文字坐标
+	  svg_texts.data(nodes)
+	           .attr("x", function(d){ return d.x; })
+			   .attr("y", function(d){ return d.y; });							
+}
+
+
+
+
+
+    createTable2();	
+    bindnodelist();
+	init_createTable3();
+
+		 function draw7()
+		 {
+
+
+
+
+
+
+			 // 边的
+			   svg_edges = svg.selectAll("line").data(edges);
+			 svg_edges.attr("x1",function(d){ return d.source.x; })
+					 .attr("y1",function(d){ return d.source.y; })
+					 .attr("x2",function(d){ return d.target.x; })
+					 .attr("y2",function(d){ return d.target.y; });
+
+
+			 var     enteredge=svg_edges.enter();
+			 enteredge.append("line")
+					 .style("stroke","#ccc")
+					 .style("stroke-width",1);
+			 var     exitedge=svg_edges.exit();
+
+
+
+
+			 //添加节点
+			  svg_nodes=svg.selectAll("circle")
+					 .data(nodes);
+			 svg_nodes.attr("x", function(d){ return d.x; })
+					 .attr("y", function(d){ return d.y; });
+			 var   enternode=svg_nodes.enter();
+			 enternode.append("circle")
+					 .attr("r",20)
+					 .style("fill",function(d,i){
+						 return color(Lable_t[num][i]);
+					 })
+					 .call(force.drag);	//使得节点能够拖动
+			 var   exitnode=svg_nodes.exit();
+
+			 exitnode.remove();
+
+			  svg_texts=svg.selectAll("text")
+					 .data(nodes);
+			 svg_texts.attr("x", function(d){ return d.x; })
+					 .attr("y", function(d){ return d.y; });
+
+			 var   entertext=svg_texts.enter();
+			 var   exittext=svg_texts.exit();
+
+
+			 entertext.append("text")
+					 .style("fill", "black")
+					 .attr("dx", 20)
+					 .attr("dy", 8)
+					 .text(function(d){
+						 return d.name;
+					 });
+			 exittext.remove();
+			 force.on("tick", function(){	//对于每一个时间间隔
+
+				 //更新连线坐标
+				  svg_edges.attr("x1",function(d){ return d.source.x; })
+						 .attr("y1",function(d){ return d.source.y; })
+						 .attr("x2",function(d){ return d.target.x; })
+						 .attr("y2",function(d){ return d.target.y; });
+
+				 //更新节点坐标
+				  svg_nodes.attr("cx",function(d){ return d.x; })
+						   .attr("cy",function(d){ return d.y; })
+						   .style("fill",function(d,i){
+							   return color(Lable_t[num][i]);
+						  });
+
+				 //更新文字坐标
+				  svg_texts.attr("x", function(d){ return d.x; })
+						 .attr("y", function(d){ return d.y; });
+			 });
+			 force.start();
+
+		 }
+		 //community();
+		draw7();
+		
+		  
+		  
+		  //
+
+//弄到指定的DIV当中
+//var div = d3.select("body").append("div");   //在body里添加一个div
+//var svg = div.append("svg");  //在div里添加svg
+		  
+        </script>  
+		
+    </body>  
+</html>  
