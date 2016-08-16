@@ -20,6 +20,6 @@ Visualizing community detection after processed by a new graph processing system
 ![](https://github.com/CinderaLuo/GPUGraphVisualization/blob/master/explain.png)
 
 说明：1. 下载之后，需要解压dataset.zip，把dataset里面的*.txt都拷贝到./linkurious/下。
-     （原因：dataset里面的数据太大了，超过Github要求文件大小100M，很难上传成功。）
-     
-      2.运行的时候，需要打开tomcat。 
+（原因：dataset里面的数据太大了，超过Github要求文件大小100M，很难上传成功。）
+
+ 2.运行的时候，需要打开tomcat。 
